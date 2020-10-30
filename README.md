@@ -1,65 +1,71 @@
-# magic README
+![](https://files.mdnice.com/logo.svg)
 
-This is the README for your extension "magic". After writing up a brief description, we recommend including the following sections.
+# vscode插件——ssh一键上传
 
-## Features
+上传文件至服务器常用方法：
+1. 通过Xshell 命令上传
+2. 通过filezilla 可视化界面拖动上传
+3. 脚本代码通过ssh进行上传（可自行配置业务代码）
+4. 通过Jenkins 进项项目配置上传（关联git仓库）
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+公司内部团队基于`node-ssh`封装了内部打包脚手架，基于“能懒则懒”的原则，脚手架始还是得输入一次命令行，Jenkins由于没有关联git仓库进行自动更新（原因嘛，喜欢看得见摸得着的更新，更具有安全感），so参考[前端一键自动部署工具](https://juejin.im/post/6872914108979609614)，完成了基于vscode的插件，实现一键上传服务器功能。
 
-For example if there is an image subfolder under your extension project workspace:
+## 插件功能
+1. 自动构建打包项目
+2. 自动压缩
+3. 自动上传服务器发布
 
-\!\[feature X\]\(images/feature-x.png\)
+## 项目地址
+1. git地址 []()
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## 使用介绍
+1. 在工作区根路径下添加deploy.config文件
+2. 配置项目如下
+```javascript
 
-## Requirements
+const config = {
+  test: {
+    host: '127.0.0.1', // 服务器地址
+    user: 'root', // 登录用户名
+    password: 'password', // 登录密码
+    remotePath: '/home/www/admin', // 项目上传的服务器文件目录
+    build: 'yarn build:test', // 构建执行的命令
+  },
+  preprod: {
+    host: '192.168.0.1',
+    user: 'root',
+    password: 'password',
+    remotePath: '/home/www/admin', 
+    build: 'yarn build:pre',
+  },
+  master: {
+    host: '192.168.0.2',
+    user: 'root',
+    password: 'password',
+    remotePath: '/home/www/admin', 
+    build: 'yarn build',
+  },
+};
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+module.exports = config;
+```
 
-## Extension Settings
+可配置多个环境下的服务器地址及对应的配置项，配置参数说明。
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+| 参数    | 说明    |
+| --- | --- |
+|   host  |  服务器地址   |
+|  username   |  用户名   |
+|   password  |   密码  |
+|  remotePath   |  服务器项目文件目录   |
+|  build   |  构建代码命令   |
+|   distPath  |  打包文件夹名称, 默认 dist   |
+|   privateKey  |  string   |
 
-For example:
+## 项目演示
 
-This extension contributes the following settings:
+![]()
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+## 🙂🙂😆😘😁😝😋😄
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+又可以快乐的偷懒了...

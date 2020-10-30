@@ -21,14 +21,15 @@ export class Deploy {
     this.loading = false;
     this.ssh = new NodeSSH();
     this.taskList = [
-      { task: this.execBuild, tip: "打包中...", increment: 10 },
-      { task: this.buildZip, tip: "压缩文件中...", increment: 10 },
-      { task: this.connectSSH, tip: "连接服务器中...", increment: 50 },
-      { task: this.uploadLocalFile, tip: "上传文件至服务器中...", increment: 60 },
-      { task: this.removeRemoteFile, tip: "删除服务器压缩中...", increment: 80, async: false },
-      { task: this.unzipRemoteFile, tip: "解压服务器文件中...", increment: 70 },
-      { task: this.disconnectSSH, tip: "断开服务器中...", increment: 90, async: false },
-      { task: this.removeLocalFile, tip: "删除本地压缩文件中...", increment: 100, async: false },
+      { task: this.checkConfig, tip: "配置检查", increment: 0, async: false },
+      { task: this.execBuild, tip: "打包", increment: 10 },
+      { task: this.buildZip, tip: "压缩文件", increment: 20 },
+      { task: this.connectSSH, tip: "连接服务器", increment: 50 },
+      { task: this.removeRemoteFile, tip: "删除服务器文件", increment: 60, async: false },
+      { task: this.uploadLocalFile, tip: "上传文件至服务器", increment: 70 },
+      { task: this.unzipRemoteFile, tip: "解压服务器文件", increment: 80 },
+      { task: this.disconnectSSH, tip: "断开服务器", increment: 90, async: false },
+      { task: this.removeLocalFile, tip: "删除本地压缩文件", increment: 100, async: false },
     ];
     this.start();
   }
@@ -40,21 +41,25 @@ export class Deploy {
       title: `打包上传(${host})`,
     };
     vscode.window.withProgress(progressOptions, async (progress, token) => {
+      let schedule = "";
       try {
         const { taskList } = this;
         const { length } = taskList;
         for (let i = 0; i < length; i++) {
           const { task, async, tip, increment } = taskList[i];
-          progress.report({ increment, message: `${tip}（${increment}%）` });
+          progress.report({ increment, message: `${tip}中...（${increment}%）` });
+          schedule = tip;
           if (async === false) {
             task();
           } else {
             await task();
           }
         }
+        log("--------执行成功-------");
         vscode.window.showInformationMessage(`上传成功(${host})`, "知道了");
       } catch (err) {
         vscode.window.showInformationMessage(`上传失败(${host})：${err}`, "知道了");
+        error(`${schedule}失败:`);
         error(err);
       }
       return new Promise((resolve) => {
@@ -63,14 +68,33 @@ export class Deploy {
     });
     
   };
+  checkConfig = () => {
+    const { host, username, remotePath, distPath } = this.config;
+    console.log(`检测配置...`, this.config);
+    if (!remotePath) {
+      throw new Error("请配置服务器文件目录[remotePath]");
+    }
+    if (!username) {
+      throw new Error("请配置用户名[username]");
+    }
+    if (!host) {
+      throw new Error("请配置服务端地址[host]");
+    }
+    if (!distPath) {
+      throw new Error("请配置本地需要上传的目录[distPath]");
+    }
+  };
   // 1. 执行打包脚本
   execBuild = () => {
     const { config } = this;
     const { build } = config;
-    console.log(`1.执行打包脚本：yarn ${build}`);
+    console.log(`1.执行打包脚本：${build}`);
+    if (!build) {
+      return Promise.resolve();
+    }
     return new Promise((resolve, reject) => {
       childProcess.exec(
-        `yarn ${build}`,
+        `${build}`,
         { cwd: this.workspaceRoot },
         (e: { message: any; } | null) => {
           if (e === null) {
@@ -86,7 +110,7 @@ export class Deploy {
   buildZip = () => {
     const { config } = this;
     return new Promise((resolve, reject) => {
-      log(`2. 压缩文件夹： ${config.distPath} Zip`);
+      log(`2. 压缩文件夹： ${config.distPath}.zip`);
       const archive = archiver('zip', {
         zlib: { level: 9 }
       }).on('error', (e: any) => {
@@ -106,7 +130,7 @@ export class Deploy {
         });
 
       archive.pipe(output);
-      archive.directory(config.distPath, false);
+      archive.directory(`${this.workspaceRoot}/${config.distPath}`, false);
       archive.finalize();
     });
   };
@@ -116,31 +140,28 @@ export class Deploy {
     log(`3. 连接服务器： ${underline(config.host)}`);
     return new Promise((resolve, reject) =>{
       this.ssh.connect(config).then(() => {
-        console.log("连接服务器成功");
         resolve();
       }).catch((err) => {
-        console.log("连接服务器失败");
         reject(err);
       });
-    });
-  };
-  // 上传本地文件
-  uploadLocalFile = () => {
-    const { config } = this;
-    const localFileName = `${config.distPath}.zip`;
-    const remoteFileName = `${config.remotePath}.zip`;
-    const localPath = `${this.workspaceRoot}/${localFileName}`;
-    log(`4. 上传打包zip至目录： ${underline(remoteFileName)}`);
-    return this.ssh.putFile(localPath, remoteFileName, null, {
-      concurrency: 1
     });
   };
   // 删除远程文件
   removeRemoteFile = () => {
     const { config } = this;
     const { remotePath } = config;
-    log(`5. 删除远程文件 ${underline(remotePath)}`);
+    log(`4. 删除远程文件 ${underline(remotePath)}`);
     return this.ssh.execCommand(`rm -rf ${remotePath}`);
+  };
+  // 上传本地文件
+  uploadLocalFile = () => {
+    const { config } = this;
+    const localFileName = `${config.distPath}.zip`;
+    const localPath = `${this.workspaceRoot}/${localFileName}`;
+    log(`5. 上传打包zip至目录： ${underline(localPath)}`);
+    return this.ssh.putFile(localPath, localFileName, null, {
+      concurrency: 1
+    });
   };
   // 解压远程文件
   unzipRemoteFile = () => {

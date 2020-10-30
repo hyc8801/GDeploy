@@ -1,6 +1,6 @@
 {
   "name": "magic",
-  "displayName": "魔法球",
+  "displayName": "ssh配置",
   "description": "一个扩展插件，支持ssh上传",
   "publisher": "hyc",
   "keywords": [

@@ -5,13 +5,22 @@ import { Deploy } from "./deploy";
 
 export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
   // workspaceRoot 当前工作区根路径
-  deployConfig: DeployConfig;
   constructor(private workspaceRoot: string) {
-    this.deployConfig = require(this.workspaceRoot + "/deploy.config");
+  
   }
   
   private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | void> = new vscode.EventEmitter<Dependency | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | void> = this._onDidChangeTreeData.event;
+  getDeployConfig = () => {
+    try {
+      const url = this.workspaceRoot + "/deploy.config";
+      // 手动删除require缓存
+      delete require.cache[require.resolve(url)];
+      return require(url);
+    } catch (error) {
+      return  {};
+    }
+  };
 
   getTreeItem(element: Dependency): vscode.TreeItem  {
     return element;
@@ -31,7 +40,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
     if (element) {
       return Promise.resolve([]);
     } else {
-      const configList = toArray(this.deployConfig).map((item) =>{
+      const configList = toArray(this.getDeployConfig()).map((item) =>{
         return new Dependency(item.name, item.config.host, 0, item.config, this.workspaceRoot, {
           title: "打包上传",
           command: "nodeDependencies.uploadEntry",
@@ -72,9 +81,7 @@ const toArray = (obj: {[x: string]: any}): {name: string, config: any}[] => {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const element = obj[key];
-      element.username = element.user;
-
-      arr.push({name: key, config: Object.assign({distPath: "dist"}, element)});
+      arr.push({name: key, config: Object.assign({distPath: "dist", remove: true}, element)});
     }
   }
   return arr;
@@ -84,11 +91,11 @@ export interface DeployConfig {[x: string]: DeployConfigItem}
 
 export interface DeployConfigItem {
   host: string; // 服务器地址
-  user?: string, // 用户名
-  username?: string, // 用户名
+  username: string, // 用户名
   password: string, // 密码
   remotePath: string, // 服务器文件目录
-  build: string, // 构建代码命令
-  distPath?: string; // 打包好的文件夹名称, 默认 dist
+  build?: string, // 构建代码命令
+  distPath?: string; // 打包文件夹名称, 默认 dist
   privateKey?: string; // 秘钥地址
+  remove?: boolean; // 是否删除远程文件
 }
