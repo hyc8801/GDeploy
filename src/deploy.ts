@@ -156,20 +156,23 @@ export class Deploy {
   // 上传本地文件
   uploadLocalFile = () => {
     const { config } = this;
-    const localFileName = `${config.distPath}.zip`;
-    const localPath = `${this.workspaceRoot}/${localFileName}`;
+    const remoteFile = `${config.remotePath}/${config.distPath}.zip`;
+    const localPath = `${this.workspaceRoot}/${config.distPath}.zip`;
     log(`5. 上传打包zip至目录： ${underline(localPath)}`);
-    return this.ssh.putFile(localPath, localFileName, null, {
+    
+    return this.ssh.putFile(localPath, remoteFile, null, {
       concurrency: 1
     });
   };
   // 解压远程文件
   unzipRemoteFile = () => {
-    const { remotePath } = this.config;
+    const { remotePath, distPath } = this.config;
     const remoteFileName = `${remotePath}.zip`;
+    const remoteFile = `${remotePath}/${distPath}.zip`;
+
     log(`6. 解压远程文件 ${underline(remoteFileName)}`);
     return this.ssh.execCommand(
-      `unzip -o ${remoteFileName} -d ${remotePath} && rm -rf ${remoteFileName}`
+      `unzip -o ${remoteFile} -d ${remotePath}`
     );
   };
   // 删除本地打包文件
