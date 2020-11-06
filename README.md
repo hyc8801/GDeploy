@@ -1,5 +1,3 @@
-![](https://imgkr2.cn-bj.ufileos.com/8d6e7edb-a9f1-40ce-881b-ffa352312e55.png?UCloudPublicKey=TOKEN_8d8b72be-579a-4e83-bfd0-5f6ce1546f13&Signature=1cscUK%252BYjeK7rUUbyKAHX1rueJo%253D&Expires=1604128009)
-
 # vscode 插件——GDeploy(一键打包上传项目)
 
 上传文件至服务器常用方法：
@@ -23,7 +21,8 @@
 
 ## 使用介绍
 
-1. vscode 扩展搜索“GDeploy”，下载安装。
+1. vscode 扩展搜索“GDeploy”，下载安装 （或git仓库中下载对应vsix文件安装）。
+  > vscode -> 扩展 -> 更多（...）-> 从VSIX安装
 2. 在工作区根路径下添加 deploy.config 文件
 3. 配置项目如下
 
@@ -32,21 +31,21 @@
 const config = {
   test: {
     host: '127.0.0.1', // 服务器地址
-    user: 'root', // 登录用户名
+    username: 'root', // 登录用户名
     password: 'password', // 登录密码
     remotePath: '/home/www/admin', // 项目上传的服务器文件目录
     build: 'yarn build:test', // 构建执行的命令
   },
   preprod: {
     host: '192.168.0.1',
-    user: 'root',
+    username: 'root',
     password: 'password',
     remotePath: '/home/www/admin',
     build: 'yarn build:pre',
   },
   master: {
     host: '192.168.0.2',
-    user: 'root',
+    username: 'root',
     password: 'password',
     remotePath: '/home/www/admin',
     build: 'yarn build',
@@ -70,7 +69,15 @@ module.exports = config;
 
 ## 项目演示
 
-![](https://imgkr2.cn-bj.ufileos.com/43f23f0c-70d4-4748-a48d-c10ebec54ba5.gif?UCloudPublicKey=TOKEN_8d8b72be-579a-4e83-bfd0-5f6ce1546f13&Signature=WuB4lGUqT8UimKJtySQfFJZOpy4%253D&Expires=1604127254)
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d828cbdfff694571942e1b4c2002fb55~tplv-k3u1fbpfcp-watermark.image)
+
+## 常见问题
+
+1. 修改配置文件（deploy.config）未生效
+
+  > 服务器列表上方点击“刷新”按钮进行更新。
+
+
 
 ## 🙂🙂😆😘😁😝😋😄
 
