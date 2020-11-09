@@ -10,8 +10,9 @@ let loading = false;
  * @param dependency 
  */
 export const uploadEntry = (dependency: Dependency) => {
-  if (!dependency) {return;}
-  console.log(dependency);
+  if (!dependency) {
+    return;
+  }
   if (loading) {
     vscode.window.showInformationMessage(`当前已有任务正在进行，请稍后再试`, "知道了");
     return;

@@ -5,9 +5,7 @@
   "publisher": "hyc",
   "keywords": [
     "ssh",
-    "服务器上传",
-    "魔法球",
-    "代码模板"
+    "服务器上传"
   ],
   "version": "0.0.1",
   "engines": {
