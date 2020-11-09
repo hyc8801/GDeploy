@@ -7,7 +7,7 @@
 3. 脚本代码通过 ssh 进行上传（可自行配置业务代码）
 4. 通过 Jenkins 进项项目配置上传（关联 git 仓库）
 
-公司内部团队基于`node-ssh`封装了内部打包脚手架，基于“能懒则懒”的原则，脚手架始还是得输入一次命令行，Jenkins 由于没有关联 git 仓库进行自动更新（原因嘛，喜欢看得见摸得着的更新，更具有安全感），so 参考[前端一键自动部署工具](https://juejin.im/post/6872914108979609614)，完成了基于 vscode 的插件，实现一键上传服务器功能。
+公司内部团队基于`node-ssh`封装了内部打包脚手架，基于“能懒则懒”的原则，脚手架始还是得输入一次命令行，Jenkins 由于没有关联 git 仓库进行自动更新（原因嘛，喜欢看得见摸得着的更新，更具有安全感），so 参考[前端一键自动部署工具](https://github.com/fuchengwei/deploy-cli-service)，完成了基于 vscode 的插件，实现一键上传服务器功能。
 
 ## 插件功能
 
@@ -17,7 +17,7 @@
 
 ## 项目地址
 
-1. git 地址： [https://github.com/15669028801/vscode-ssh.git](https://github.com/15669028801/vscode-ssh.git)
+1. git 地址： [https://github.com/15669028801/GDeploy.git](https://github.com/15669028801/GDeploy.git)
 
 ## 使用介绍
 

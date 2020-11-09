@@ -1,13 +1,14 @@
 {
-  "name": "magic",
+  "name": "gdeploy",
   "displayName": "GDeploy",
   "description": "一个扩展插件，支持ssh上传",
   "publisher": "hyc",
+  "icon": "media/worker.png",
   "keywords": [
     "ssh",
     "服务器上传"
   ],
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.50.0"
   },
@@ -22,15 +23,11 @@
     "commands": [
       {
         "command": "nodeDependencies.refreshEntry",
-        "title": "Refresh",
+        "title": "刷新",
         "icon": {
           "light": "resources/refresh_light.svg",
           "dark": "resources/refresh_dark.svg"
         }
-      },
-      {
-        "command": "nodeDependencies.addEntry",
-        "title": "Add"
       },
       {
         "command": "nodeDependencies.uploadEntry",
@@ -39,10 +36,6 @@
           "light": "resources/upload_light.svg",
           "dark": "resources/upload_dark.svg"
         }
-      },
-      {
-        "command": "nodeDependencies.deleteEntry",
-        "title": "Delete"
       }
     ],
     "menus": {
@@ -51,10 +44,6 @@
           "command": "nodeDependencies.refreshEntry",
           "when": "view == nodeDependencies",
           "group": "navigation"
-        },
-        {
-          "command": "nodeDependencies.addEntry",
-          "when": "view == nodeDependencies"
         }
       ],
       "view/item/context": [
@@ -117,5 +106,13 @@
     "inquirer": "^7.3.3",
     "node-ssh": "^11.1.1",
     "ora": "^5.1.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/15669028801/GDeploy/issues"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/15669028801/GDeploy"
+  },
+  "homepage": "https://github.com/15669028801/GDeploy"
 }
