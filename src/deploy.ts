@@ -95,7 +95,7 @@ export class Deploy {
     return new Promise((resolve, reject) => {
       childProcess.exec(
         `${build}`,
-        { cwd: this.workspaceRoot, maxBuffer: 200*1024 },
+        { cwd: this.workspaceRoot, maxBuffer: 1024 * 1024 * 1024 },
         (e: { message: any; } | null) => {
           if (e === null) {
             resolve();

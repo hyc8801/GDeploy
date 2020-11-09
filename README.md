@@ -35,6 +35,7 @@ const config = {
     password: 'password', // 登录密码
     remotePath: '/home/www/admin', // 项目上传的服务器文件目录
     build: 'yarn build:test', // 构建执行的命令
+    distPath: 'dist', // 打包好需要上传的目录
   },
   preprod: {
     host: '192.168.0.1',
