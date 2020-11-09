@@ -11,14 +11,14 @@ const { log, error, succeed, info, underline, } = oConsole;
 
 export class Deploy {
   config: DeployConfigItem;
-  loading: boolean;
   ssh: NodeSSH;
   workspaceRoot: string;
   taskList: { task: () => void | Promise<any>; tip: string; increment: number; async?: boolean; }[];
-  constructor(config: DeployConfigItem, workspaceRoot: string) {
+  callback: (success: boolean) => void;
+  constructor(config: DeployConfigItem, workspaceRoot: string, callback: (success: boolean) => void) {
     this.config = config;
     this.workspaceRoot = workspaceRoot;
-    this.loading = false;
+    this.callback = callback;
     this.ssh = new NodeSSH();
     this.taskList = [
       { task: this.checkConfig, tip: "配置检查", increment: 0, async: false },
@@ -56,8 +56,10 @@ export class Deploy {
           }
         }
         log("--------执行成功-------");
+        this.callback(true);
         vscode.window.showInformationMessage(`上传成功(${host})`, "知道了");
       } catch (err) {
+        this.callback(false);
         vscode.window.showInformationMessage(`上传失败(${host})：${err}`, "知道了");
         error(`${schedule}失败:`);
         error(err);
