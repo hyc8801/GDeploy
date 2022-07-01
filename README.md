@@ -1,5 +1,9 @@
 # vscode 插件——GDeploy(一键打包上传项目)
 
+![](https://vsmarketplacebadge.apphb.com/downloads-short/hyc15669028801.gdeploy.svg)
+![](https://img.shields.io/github/forks/15669028801/GDeploy)
+
+
 上传文件至服务器常用方法：
 
 1. 通过 Xshell 命令上传
