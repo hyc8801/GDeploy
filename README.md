@@ -72,7 +72,7 @@ module.exports = config;
 | distPath   | 打包文件夹名称, 默认 dist |
 | privateKey | 秘钥地址 🔑               |
 
-## ⚔项目演示
+## ⚔ 项目演示
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d828cbdfff694571942e1b4c2002fb55~tplv-k3u1fbpfcp-watermark.image)
 
